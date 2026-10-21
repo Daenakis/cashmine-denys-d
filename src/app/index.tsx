@@ -3,10 +3,10 @@ import { type ReactElement, useCallback, useMemo } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { strings } from '@/i18n/strings';
-import { maskToken } from '@/token/tokenStorage';
+import { maskToken } from '@/token/helpers';
 import { useToken } from '@/token/useToken';
 import { Button } from '@/ui/Button';
-import { colors, spacing } from '@/ui/theme';
+import { colors, fontSize, fontWeight, sizes, spacing } from '@/constants/theme';
 
 export default function HomeScreen(): ReactElement {
   const { token } = useToken();
@@ -16,7 +16,7 @@ export default function HomeScreen(): ReactElement {
 
   const renderHeaderRight = useCallback(
     (): ReactElement => (
-      <TouchableOpacity testID="open-token" hitSlop={8} onPress={openToken} style={styles.headerButton}>
+      <TouchableOpacity testID="open-token" hitSlop={sizes.hitSlop} onPress={openToken} style={styles.headerButton}>
         <Text style={styles.headerButtonText}>{hasToken ? strings.home.tokenButton : strings.home.addTokenButton}</Text>
       </TouchableOpacity>
     ),
@@ -46,8 +46,8 @@ export default function HomeScreen(): ReactElement {
 const styles = StyleSheet.create({
   container: { flex: 1, padding: spacing.md },
   empty: { gap: spacing.md, marginTop: spacing.lg },
-  title: { fontSize: 20, fontWeight: '600', color: colors.text },
-  text: { fontSize: 15, color: colors.muted },
+  title: { fontSize: fontSize.xl, fontWeight: fontWeight.semibold, color: colors.text },
+  text: { fontSize: fontSize.body, color: colors.muted },
   headerButton: { paddingHorizontal: spacing.md },
-  headerButtonText: { color: colors.primary, fontSize: 16, fontWeight: '600' },
+  headerButtonText: { color: colors.primary, fontSize: fontSize.md, fontWeight: fontWeight.semibold },
 });

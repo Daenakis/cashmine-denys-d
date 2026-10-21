@@ -1,20 +1,9 @@
 import type { z } from 'zod';
 
-import { API_BASE_URL } from './config';
-import type { ApiError, ApiErrorCode, Result } from './errors';
-import { errorEnvelopeSchema } from './schemas';
+import { API_BASE_URL, REQUEST_TIMEOUT_MS } from '@/constants/api';
+import type { ApiResult } from '@/types/apiError';
 
-const REQUEST_TIMEOUT_MS: number = 20_000;
-
-const KNOWN_CODES: readonly ApiErrorCode[] = [
-  'VALIDATION',
-  'UNAUTHORIZED',
-  'NOT_FOUND',
-  'IDEMPOTENCY_MISMATCH',
-  'RATE_LIMITED',
-  'SERVER',
-  'TIMEOUT',
-];
+import { toHttpError } from './helpers';
 
 type RequestOptions<S extends z.ZodType> = {
   token: string | null;
@@ -34,7 +23,7 @@ export async function request<S extends z.ZodType>({
   body,
   headers,
   signal,
-}: RequestOptions<S>): Promise<Result<z.infer<S>>> {
+}: RequestOptions<S>): Promise<ApiResult<z.infer<S>>> {
   if (!token) return { ok: false, error: { kind: 'config', message: 'API token is not set' } };
 
   const controller: AbortController = new AbortController();
@@ -78,38 +67,4 @@ export async function request<S extends z.ZodType>({
   const parsed = schema.safeParse(json);
   if (!parsed.success) return { ok: false, error: { kind: 'parse', message: parsed.error.message } };
   return { ok: true, data: parsed.data };
-}
-
-function toHttpError(response: Response, json: unknown): ApiError {
-  const envelope = errorEnvelopeSchema.safeParse(json);
-  const retryAfterHeader: number = Number(response.headers.get('Retry-After'));
-  const retryAfterFromHeader: number | undefined = Number.isFinite(retryAfterHeader) && retryAfterHeader > 0
-    ? retryAfterHeader * 1000
-    : undefined;
-
-  if (!envelope.success) {
-    return {
-      kind: 'http',
-      status: response.status,
-      code: 'UNKNOWN',
-      message: response.statusText || `HTTP ${response.status}`,
-      retryAfterMs: retryAfterFromHeader,
-    };
-  }
-
-  const { code, message, field, retryAfterMs } = envelope.data.error;
-  return {
-    kind: 'http',
-    status: response.status,
-    code: KNOWN_CODES.includes(code as ApiErrorCode) ? (code as ApiErrorCode) : 'UNKNOWN',
-    message,
-    field,
-    retryAfterMs: retryAfterMs ?? retryAfterFromHeader,
-  };
-}
-
-// React Query expects thrown errors; we throw the tagged ApiError value itself.
-export function unwrap<T>(result: Result<T>): T {
-  if (result.ok) return result.data;
-  throw result.error;
 }

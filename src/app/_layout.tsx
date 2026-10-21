@@ -8,7 +8,7 @@ import { createAppQueryClient } from '@/api/queryClient';
 import { useTokenScopedCache } from '@/api/useTokenScopedCache';
 import { strings } from '@/i18n/strings';
 import { TokenProvider } from '@/token/TokenContext';
-import { colors } from '@/ui/theme';
+import { colors, fontWeight } from '@/constants/theme';
 
 export default function RootLayout(): ReactElement {
   const [queryClient] = useState(createAppQueryClient);
@@ -36,7 +36,7 @@ function RootStack(): ReactElement {
 
 const styles = StyleSheet.create({
   content: { backgroundColor: colors.background },
-  headerTitle: { fontWeight: '600' },
+  headerTitle: { fontWeight: fontWeight.semibold },
 });
 
 const screenOptions = {

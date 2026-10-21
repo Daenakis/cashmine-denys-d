@@ -2,11 +2,11 @@
 // Storage access can throw (private mode, blocked site data), so every call is guarded
 // and the app keeps working with the in-memory value from TokenProvider.
 
-const STORAGE_KEY: string = 'cashmine.apiToken';
+import { TOKEN_STORAGE_KEY } from '@/constants/storage';
 
 export function readStoredToken(): string | null {
   try {
-    return globalThis.localStorage?.getItem(STORAGE_KEY) ?? null;
+    return globalThis.localStorage?.getItem(TOKEN_STORAGE_KEY) ?? null;
   } catch {
     return null;
   }
@@ -14,13 +14,9 @@ export function readStoredToken(): string | null {
 
 export function writeStoredToken(value: string | null): void {
   try {
-    if (value === null) globalThis.localStorage?.removeItem(STORAGE_KEY);
-    else globalThis.localStorage?.setItem(STORAGE_KEY, value);
+    if (value === null) globalThis.localStorage?.removeItem(TOKEN_STORAGE_KEY);
+    else globalThis.localStorage?.setItem(TOKEN_STORAGE_KEY, value);
   } catch {
     // The token just won't survive a reload.
   }
-}
-
-export function maskToken(token: string): string {
-  return token.length <= 4 ? '••••' : `••••${token.slice(-4)}`;
 }

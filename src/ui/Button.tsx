@@ -1,7 +1,7 @@
 import { type ReactElement, memo, useMemo } from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 
-import { colors, spacing } from './theme';
+import { activeOpacity, colors, disabledOpacity, fontSize, fontWeight, radius, sizes, spacing } from '@/constants/theme';
 
 type Variant = 'primary' | 'secondary' | 'danger';
 
@@ -36,7 +36,7 @@ export const Button = memo(function Button({
       testID={testID}
       disabled={disabled}
       onPress={onPress}
-      activeOpacity={0.8}
+      activeOpacity={activeOpacity}
       style={containerStyle}
     >
       <Text style={labelStyle}>{title}</Text>
@@ -46,8 +46,8 @@ export const Button = memo(function Button({
 
 const styles = StyleSheet.create({
   base: {
-    minHeight: 48,
-    borderRadius: 10,
+    minHeight: sizes.control,
+    borderRadius: radius.md,
     paddingHorizontal: spacing.md,
     alignItems: 'center',
     justifyContent: 'center',
@@ -55,8 +55,8 @@ const styles = StyleSheet.create({
   primary: { backgroundColor: colors.primary },
   secondary: { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border },
   danger: { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.danger },
-  disabled: { opacity: 0.5 },
-  label: { color: colors.primaryText, fontSize: 16, fontWeight: '600' },
+  disabled: { opacity: disabledOpacity },
+  label: { color: colors.primaryText, fontSize: fontSize.md, fontWeight: fontWeight.semibold },
   secondaryLabel: { color: colors.text },
   dangerLabel: { color: colors.danger },
 });

@@ -1,14 +1,14 @@
 import { type InfiniteData, type UseInfiniteQueryResult, useInfiniteQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 
+import { ACTIVITY_PAGE_SIZE } from '@/constants/query';
 import { useToken } from '@/token/useToken';
 
-import { request, unwrap } from './client';
-import type { ApiError, Result } from './errors';
+import { request } from './client';
+import { unwrap } from './helpers';
+import type { ApiError, ApiResult } from '@/types/apiError';
 import { queryKeys } from './queryKeys';
 import { isoDateTime, signedDecimalString } from './schemas';
-
-export const ACTIVITY_PAGE_SIZE: number = 20;
 
 const activityBase = {
   id: z.string(),
@@ -54,7 +54,7 @@ export function fetchActivity(
   cursor: string | null,
   limit: number,
   signal?: AbortSignal,
-): Promise<Result<ActivityPage>> {
+): Promise<ApiResult<ActivityPage>> {
   const params: URLSearchParams = new URLSearchParams({ limit: String(limit) });
   if (cursor) params.set('cursor', cursor);
   return request({ token, path: `/v1/activity?${params.toString()}`, schema: activityPageSchema, signal });

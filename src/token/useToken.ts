@@ -1,6 +1,8 @@
 import { useContext } from 'react';
 
-import { TokenContext, type TokenContextValue } from './TokenContext';
+import type { TokenContextValue } from '@/types/token';
+
+import { TokenContext } from './TokenContext';
 
 export function useToken(): TokenContextValue {
   const context: TokenContextValue | null = useContext(TokenContext);

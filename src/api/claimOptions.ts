@@ -3,8 +3,9 @@ import { z } from 'zod';
 
 import { useToken } from '@/token/useToken';
 
-import { request, unwrap } from './client';
-import type { ApiError, Result } from './errors';
+import { request } from './client';
+import { unwrap } from './helpers';
+import type { ApiError, ApiResult } from '@/types/apiError';
 import { queryKeys } from './queryKeys';
 import { decimalString } from './schemas';
 
@@ -21,7 +22,7 @@ export function fetchClaimOptions(
   token: string | null,
   asset: string,
   signal?: AbortSignal,
-): Promise<Result<ClaimOptions>> {
+): Promise<ApiResult<ClaimOptions>> {
   return request({
     token,
     path: `/v1/claim-options?asset=${encodeURIComponent(asset)}`,

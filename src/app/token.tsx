@@ -3,10 +3,10 @@ import { StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { strings } from '@/i18n/strings';
 import { goBackOrHome } from '@/navigation/goBackOrHome';
-import { maskToken } from '@/token/tokenStorage';
+import { maskToken } from '@/token/helpers';
 import { useToken } from '@/token/useToken';
 import { Button } from '@/ui/Button';
-import { colors, spacing } from '@/ui/theme';
+import { colors, fontSize, fontWeight, radius, sizes, spacing } from '@/constants/theme';
 
 export default function TokenScreen(): ReactElement {
   const { token, setToken, clearToken } = useToken();
@@ -73,22 +73,22 @@ const styles = StyleSheet.create({
   container: { flex: 1, padding: spacing.md, gap: spacing.md },
   card: {
     backgroundColor: colors.surface,
-    borderRadius: 12,
+    borderRadius: radius.lg,
     padding: spacing.md,
     gap: spacing.sm,
     borderWidth: 1,
     borderColor: colors.border,
   },
-  label: { fontSize: 14, color: colors.muted },
-  value: { fontSize: 18, fontWeight: '600', color: colors.text, fontFamily: 'monospace' },
+  label: { fontSize: fontSize.label, color: colors.muted },
+  value: { fontSize: fontSize.lg, fontWeight: fontWeight.semibold, color: colors.text, fontFamily: 'monospace' },
   input: {
-    minHeight: 48,
+    minHeight: sizes.control,
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: 10,
+    borderRadius: radius.md,
     paddingHorizontal: spacing.sm,
-    fontSize: 16,
+    fontSize: fontSize.md,
     color: colors.text,
   },
-  hint: { fontSize: 13, color: colors.muted },
+  hint: { fontSize: fontSize.sm, color: colors.muted },
 });

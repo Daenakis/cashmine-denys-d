@@ -1,10 +1,10 @@
 import { z } from 'zod';
 
-// Decimal strings as the API defines them: digits, optional dot + digits, no leading zeros.
-export const decimalString = z.string().regex(/^(0|[1-9]\d*)(\.\d+)?$/, 'Invalid decimal string');
+import { DECIMAL_STRING_REGEX, SIGNED_DECIMAL_STRING_REGEX } from '@/constants/regex';
 
-// Activity amounts are signed (negative for reversals and claims).
-export const signedDecimalString = z.string().regex(/^-?(0|[1-9]\d*)(\.\d+)?$/, 'Invalid decimal string');
+export const decimalString = z.string().regex(DECIMAL_STRING_REGEX, 'Invalid decimal string');
+
+export const signedDecimalString = z.string().regex(SIGNED_DECIMAL_STRING_REGEX, 'Invalid decimal string');
 
 export const isoDateTime = z.iso.datetime({ offset: true });
 

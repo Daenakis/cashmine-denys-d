@@ -7,16 +7,14 @@ import {
 } from '@tanstack/react-query';
 import { z } from 'zod';
 
+import { CLAIM_POLL_MS, CREATE_CLAIM_MAX_RETRIES } from '@/constants/query';
 import { useToken } from '@/token/useToken';
+import type { ApiError, ApiResult } from '@/types/apiError';
 
-import { request, unwrap } from './client';
-import { type ApiError, type Result, isRateLimited, isRetryable } from './errors';
+import { request } from './client';
+import { getRetryDelay, isRetryable, unwrap } from './helpers';
 import { queryKeys } from './queryKeys';
 import { decimalString, isoDateTime } from './schemas';
-
-// A pending claim settles in about 20 s.
-const CLAIM_POLL_MS: number = 2_000;
-const CREATE_CLAIM_MAX_RETRIES: number = 5;
 
 export const claimStatusSchema = z.enum(['pending', 'completed', 'failed']);
 
@@ -47,7 +45,7 @@ export type CreateClaimInput = {
 export function createClaim(
   token: string | null,
   { idempotencyKey, ...body }: CreateClaimInput,
-): Promise<Result<Claim>> {
+): Promise<ApiResult<Claim>> {
   return request({
     token,
     path: '/v1/claims',
@@ -58,7 +56,7 @@ export function createClaim(
   });
 }
 
-export function fetchClaim(token: string | null, id: string, signal?: AbortSignal): Promise<Result<Claim>> {
+export function fetchClaim(token: string | null, id: string, signal?: AbortSignal): Promise<ApiResult<Claim>> {
   return request({ token, path: `/v1/claims/${encodeURIComponent(id)}`, schema: claimSchema, signal });
 }
 
@@ -70,8 +68,7 @@ export function useCreateClaim(): UseMutationResult<Claim, ApiError, CreateClaim
     // Retrying re-runs mutationFn with the same variables, so the same Idempotency-Key:
     // the server returns the original claim instead of creating a second one.
     retry: (failureCount: number, error: ApiError): boolean => failureCount < CREATE_CLAIM_MAX_RETRIES && isRetryable(error),
-    retryDelay: (attempt: number, error: ApiError): number =>
-      isRateLimited(error) && error.retryAfterMs ? error.retryAfterMs : Math.min(1000 * 2 ** attempt, 8000),
+    retryDelay: getRetryDelay,
     onSuccess: (claim: Claim): void => {
       queryClient.setQueryData(queryKeys.claim(claim.id), claim);
       void queryClient.invalidateQueries({ queryKey: queryKeys.balances });

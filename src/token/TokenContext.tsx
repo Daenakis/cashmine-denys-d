@@ -1,12 +1,8 @@
 import { type ReactElement, type ReactNode, createContext, useCallback, useMemo, useState } from 'react';
 
-import { readStoredToken, writeStoredToken } from './tokenStorage';
+import type { TokenContextValue } from '@/types/token';
 
-export type TokenContextValue = {
-  token: string | null;
-  setToken: (value: string) => void;
-  clearToken: () => void;
-};
+import { readStoredToken, writeStoredToken } from './tokenStorage';
 
 export const TokenContext = createContext<TokenContextValue | null>(null);
 

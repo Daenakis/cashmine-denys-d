@@ -29,7 +29,7 @@ Money is real for users → **correctness over polish**.
 - `.env` / `EXPO_PUBLIC_API_TOKEN` is **only** for calling the API from the shell during development.
   App code must never reference `process.env.EXPO_PUBLIC_API_TOKEN` (Expo would inline it into the bundle).
   Before deploy: grep `dist/` for the token value.
-- API base URL lives in exactly one place: `src/api/config.ts`.
+- API base URL lives in exactly one place: `src/constants/api.ts`.
 
 ## Scope, in priority order
 
