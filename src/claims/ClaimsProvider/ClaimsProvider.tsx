@@ -7,7 +7,7 @@ import { getRetryDelay, isRetryable } from '@/api/helpers';
 import { createIdempotencyKey } from '@/api/idempotency';
 import { queryKeys } from '@/api/queryKeys';
 import { CREATE_CLAIM_MAX_RETRIES } from '@/constants/query';
-import { useToken } from '@/token/useToken';
+import { selectToken, useTokenStore } from '@/token/tokenStore';
 import type { ApiResult } from '@/types/apiError';
 import type {
   AssetClaimStatus,
@@ -26,7 +26,7 @@ import { useClaimStatusSync } from '../useClaimStatusSync';
 import type { ClaimsProviderProps } from './types';
 
 export const ClaimsProvider = ({ children }: ClaimsProviderProps): ReactElement => {
-  const { token } = useToken();
+  const token: string | null = useTokenStore(selectToken);
   const queryClient: QueryClient = useQueryClient();
   const asOf: string | undefined = useBalances().data?.asOf;
 

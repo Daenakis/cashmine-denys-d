@@ -5,20 +5,17 @@ import { type ReactElement, useState } from 'react';
 import { createAppQueryClient } from '@/api/queryClient';
 import { ClaimsProvider } from '@/claims/ClaimsProvider';
 import { RootStack } from '@/navigation/RootStack';
-import { TokenProvider } from '@/token/TokenProvider';
 
 const RootLayout = (): ReactElement => {
   const [queryClient] = useState(createAppQueryClient);
 
   return (
-    <TokenProvider>
-      <QueryClientProvider client={queryClient}>
-        <StatusBar style="dark" />
-        <ClaimsProvider>
-          <RootStack />
-        </ClaimsProvider>
-      </QueryClientProvider>
-    </TokenProvider>
+    <QueryClientProvider client={queryClient}>
+      <StatusBar style="dark" />
+      <ClaimsProvider>
+        <RootStack />
+      </ClaimsProvider>
+    </QueryClientProvider>
   );
 };
 

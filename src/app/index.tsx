@@ -5,11 +5,11 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-nati
 import { BalancesContent } from '@/components/balances/BalancesContent';
 import { colors, fontSize, fontWeight, sizes, spacing } from '@/constants/theme';
 import { strings } from '@/i18n/strings';
-import { useToken } from '@/token/useToken';
+import { selectToken, useTokenStore } from '@/token/tokenStore';
 import { Button } from '@/ui/Button';
 
 const HomeScreen = (): ReactElement => {
-  const { token } = useToken();
+  const token: string | null = useTokenStore(selectToken);
   const hasToken: boolean = token !== null;
 
   const openToken = useCallback(() => router.push('/token'), []);

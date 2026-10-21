@@ -2,7 +2,7 @@ import { type UseQueryResult, useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 
 import { BALANCES_REFRESH_MS } from '@/constants/query';
-import { useToken } from '@/token/useToken';
+import { selectToken, useTokenStore } from '@/token/tokenStore';
 
 import { request } from './client';
 import { unwrap } from './helpers';
@@ -32,7 +32,7 @@ export function fetchBalances(token: string | null, signal?: AbortSignal): Promi
 }
 
 export function useBalances(): UseQueryResult<Balances, ApiError> {
-  const { token } = useToken();
+  const token: string | null = useTokenStore(selectToken);
   return useQuery<Balances, ApiError>({
     queryKey: queryKeys.balances,
     queryFn: async ({ signal }): Promise<Balances> => unwrap(await fetchBalances(token, signal)),

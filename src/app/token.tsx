@@ -4,12 +4,14 @@ import { StyleSheet, Text, TextInput, View } from 'react-native';
 import { strings } from '@/i18n/strings';
 import { goBackOrHome } from '@/navigation/goBackOrHome';
 import { maskToken } from '@/token/helpers';
-import { useToken } from '@/token/useToken';
+import { selectClearToken, selectSetToken, selectToken, useTokenStore } from '@/token/tokenStore';
 import { Button } from '@/ui/Button';
 import { colors, fontSize, fontWeight, radius, sizes, spacing } from '@/constants/theme';
 
 const TokenScreen = (): ReactElement => {
-  const { token, setToken, clearToken } = useToken();
+  const token: string | null = useTokenStore(selectToken);
+  const setToken = useTokenStore(selectSetToken);
+  const clearToken = useTokenStore(selectClearToken);
   const [draft, setDraft] = useState<string>('');
   const [confirmingRemove, setConfirmingRemove] = useState<boolean>(false);
   const trimmed: string = useMemo((): string => draft.trim(), [draft]);

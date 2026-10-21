@@ -2,7 +2,7 @@ import { type UseQueryResult, useQuery, useQueryClient } from '@tanstack/react-q
 import { z } from 'zod';
 
 import { CLAIM_POLL_MS } from '@/constants/query';
-import { useToken } from '@/token/useToken';
+import { selectToken, useTokenStore } from '@/token/tokenStore';
 import type { ApiError, ApiResult } from '@/types/apiError';
 
 import { request } from './client';
@@ -55,7 +55,7 @@ export function fetchClaim(token: string | null, id: string, signal?: AbortSigna
 }
 
 export function useClaim(id: string): UseQueryResult<Claim, ApiError> {
-  const { token } = useToken();
+  const token: string | null = useTokenStore(selectToken);
   const queryClient = useQueryClient();
   return useQuery<Claim, ApiError>({
     queryKey: queryKeys.claim(id),

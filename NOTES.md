@@ -31,7 +31,7 @@ Don't submit it again" + **Check again** (same key); the asset stays blocked; af
 resumed automatically. A new key is created only for a new user intent after a definitive answer.
 400/401/409 are definitive: the attempt is dropped and the message shown.
 
-**Other.** Token entered in the UI, never bundled (an `EXPO_PUBLIC_` env var would be inlined into the build).
+**Other.** Token entered in the UI, kept in a zustand store persisted to `localStorage`, never bundled (an `EXPO_PUBLIC_` env var would be inlined into the build).
 Base URL only in `src/constants/api.ts`. Pull-to-refresh is a no-op on react-native-web, so there is an
 explicit Refresh button. Assumption: a snapshot with `asOf ≥ t` includes all changes before `t` (docs imply it,
 don't state it; worst case the "syncing" state lasts one more 15 s cycle).
@@ -43,7 +43,8 @@ All in `ai-logs/claude-code-session.md` (Claude Code in VS Code, project rules i
 1. **Prompt that didn't work.** "токен вставил" (line 2248) — I meant the token field in the app, the AI
    looked for it in `.env`, found it empty and kept asking. I rephrased (line 2592): "the token is in the
    app's input, take it from there, add a context for it" → it moved the token into a React context and
-   verified the API through the running app in the simulator instead of the shell.
+   verified the API through the running app in the simulator instead of the shell. (The context was later
+   replaced by a small zustand store — less provider plumbing, components subscribe to just the token.)
 2. **AI output that was wrong / risky.** The project rules I wrote said the client reads the token from
    `process.env.EXPO_PUBLIC_API_TOKEN`; the AI flagged that Expo inlines such vars into the public bundle
    (line 322), and we switched to UI input + a `dist/` grep before deploy. Later its scripted refactor of

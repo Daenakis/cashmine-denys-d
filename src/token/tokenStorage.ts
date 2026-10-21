@@ -1,6 +1,6 @@
 // The API token lives in browser storage only; it is never bundled into the build.
 // Storage access can throw (private mode, blocked site data), so every call is guarded
-// and the app keeps working with the in-memory value from TokenProvider.
+// and the app keeps working with the in-memory value in the token store.
 
 import { TOKEN_STORAGE_KEY } from '@/constants/storage';
 

@@ -1,7 +1,7 @@
 import { type UseQueryResult, useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 
-import { useToken } from '@/token/useToken';
+import { selectToken, useTokenStore } from '@/token/tokenStore';
 
 import { request } from './client';
 import { unwrap } from './helpers';
@@ -32,7 +32,7 @@ export function fetchClaimOptions(
 }
 
 export function useClaimOptions(asset: string): UseQueryResult<ClaimOptions, ApiError> {
-  const { token } = useToken();
+  const token: string | null = useTokenStore(selectToken);
   return useQuery<ClaimOptions, ApiError>({
     queryKey: queryKeys.claimOptions(asset),
     queryFn: async ({ signal }): Promise<ClaimOptions> => unwrap(await fetchClaimOptions(token, asset, signal)),

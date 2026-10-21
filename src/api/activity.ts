@@ -2,7 +2,7 @@ import { type InfiniteData, type UseInfiniteQueryResult, useInfiniteQuery } from
 import { z } from 'zod';
 
 import { ACTIVITY_PAGE_SIZE } from '@/constants/query';
-import { useToken } from '@/token/useToken';
+import { selectToken, useTokenStore } from '@/token/tokenStore';
 
 import { request } from './client';
 import { unwrap } from './helpers';
@@ -63,7 +63,7 @@ export function fetchActivity(
 export function useActivity(
   limit: number = ACTIVITY_PAGE_SIZE,
 ): UseInfiniteQueryResult<InfiniteData<ActivityPage, string | null>, ApiError> {
-  const { token } = useToken();
+  const token: string | null = useTokenStore(selectToken);
   return useInfiniteQuery<ActivityPage, ApiError, InfiniteData<ActivityPage, string | null>, readonly unknown[], string | null>({
     queryKey: queryKeys.activity(limit),
     queryFn: async ({ pageParam, signal }): Promise<ActivityPage> => unwrap(await fetchActivity(token, pageParam, limit, signal)),
