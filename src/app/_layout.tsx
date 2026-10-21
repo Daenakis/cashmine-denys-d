@@ -3,6 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { type ReactElement, useState } from 'react';
 
 import { createAppQueryClient } from '@/api/queryClient';
+import { ClaimsProvider } from '@/claims/ClaimsProvider';
 import { RootStack } from '@/navigation/RootStack';
 import { TokenProvider } from '@/token/TokenProvider';
 
@@ -13,7 +14,9 @@ const RootLayout = (): ReactElement => {
     <TokenProvider>
       <QueryClientProvider client={queryClient}>
         <StatusBar style="dark" />
-        <RootStack />
+        <ClaimsProvider>
+          <RootStack />
+        </ClaimsProvider>
       </QueryClientProvider>
     </TokenProvider>
   );

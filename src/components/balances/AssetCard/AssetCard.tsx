@@ -1,4 +1,4 @@
-import { type ReactElement, memo, useMemo } from 'react';
+import { type ReactElement, memo, useCallback, useMemo } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { isZeroAmount } from '@/balances/helpers';
@@ -6,11 +6,22 @@ import { colors, fontSize, fontWeight, radius, spacing } from '@/constants/theme
 import { strings } from '@/i18n/strings';
 import { formatAssetAmount, formatUsdCents } from '@/money/format';
 import { usdCents } from '@/money/usd';
+import { Button } from '@/ui/Button';
 
 import { AmountRow } from '../AmountRow';
+import { ClaimStatusBanner } from '../ClaimStatusBanner';
 import type { AssetCardProps } from './types';
 
-export const AssetCard = memo(({ item }: AssetCardProps): ReactElement => {
+export const AssetCard = memo(
+  ({
+    item,
+    claimStatus,
+    claimBlocked,
+    onClaim,
+    onViewClaim,
+    onDismissClaim,
+    onCheckAgain,
+  }: AssetCardProps): ReactElement => {
   const view = useMemo(
     () => ({
       available: formatAssetAmount(item.available, item.decimals),
@@ -19,9 +30,12 @@ export const AssetCard = memo(({ item }: AssetCardProps): ReactElement => {
       claiming: formatAssetAmount(item.claiming, item.decimals),
       pendingZero: isZeroAmount(item.pending, item.decimals),
       claimingZero: isZeroAmount(item.claiming, item.decimals),
+      availableZero: isZeroAmount(item.available, item.decimals),
     }),
     [item],
   );
+
+  const claim = useCallback(() => onClaim(item.asset), [item.asset, onClaim]);
 
   return (
     <View style={styles.card} testID={`asset-${item.asset}`}>
@@ -37,9 +51,24 @@ export const AssetCard = memo(({ item }: AssetCardProps): ReactElement => {
         muted={view.pendingZero}
       />
       <AmountRow label={strings.home.claiming} value={`${view.claiming} ${item.asset}`} muted={view.claimingZero} />
+      <ClaimStatusBanner
+        asset={item.asset}
+        decimals={item.decimals}
+        status={claimStatus}
+        onViewClaim={onViewClaim}
+        onDismiss={onDismissClaim}
+        onCheckAgain={onCheckAgain}
+      />
+      <Button
+        testID={`claim-${item.asset}`}
+        title={strings.home.claimButton}
+        onPress={claim}
+        disabled={claimBlocked || view.availableZero}
+      />
     </View>
   );
-});
+  },
+);
 
 AssetCard.displayName = 'AssetCard';
 

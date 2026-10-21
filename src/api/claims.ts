@@ -1,18 +1,12 @@
-import {
-  type UseMutationResult,
-  type UseQueryResult,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
+import { type UseQueryResult, useQuery, useQueryClient } from '@tanstack/react-query';
 import { z } from 'zod';
 
-import { CLAIM_POLL_MS, CREATE_CLAIM_MAX_RETRIES } from '@/constants/query';
+import { CLAIM_POLL_MS } from '@/constants/query';
 import { useToken } from '@/token/useToken';
 import type { ApiError, ApiResult } from '@/types/apiError';
 
 import { request } from './client';
-import { getRetryDelay, isRetryable, unwrap } from './helpers';
+import { unwrap } from './helpers';
 import { queryKeys } from './queryKeys';
 import { decimalString, isoDateTime } from './schemas';
 
@@ -58,23 +52,6 @@ export function createClaim(
 
 export function fetchClaim(token: string | null, id: string, signal?: AbortSignal): Promise<ApiResult<Claim>> {
   return request({ token, path: `/v1/claims/${encodeURIComponent(id)}`, schema: claimSchema, signal });
-}
-
-export function useCreateClaim(): UseMutationResult<Claim, ApiError, CreateClaimInput> {
-  const { token } = useToken();
-  const queryClient = useQueryClient();
-  return useMutation<Claim, ApiError, CreateClaimInput>({
-    mutationFn: async (input: CreateClaimInput): Promise<Claim> => unwrap(await createClaim(token, input)),
-    // Retrying re-runs mutationFn with the same variables, so the same Idempotency-Key:
-    // the server returns the original claim instead of creating a second one.
-    retry: (failureCount: number, error: ApiError): boolean => failureCount < CREATE_CLAIM_MAX_RETRIES && isRetryable(error),
-    retryDelay: getRetryDelay,
-    onSuccess: (claim: Claim): void => {
-      queryClient.setQueryData(queryKeys.claim(claim.id), claim);
-      void queryClient.invalidateQueries({ queryKey: queryKeys.balances });
-      void queryClient.invalidateQueries({ queryKey: ['activity'] });
-    },
-  });
 }
 
 export function useClaim(id: string): UseQueryResult<Claim, ApiError> {

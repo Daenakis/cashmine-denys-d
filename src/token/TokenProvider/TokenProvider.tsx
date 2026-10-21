@@ -9,13 +9,13 @@ import type { TokenProviderProps } from './types';
 export const TokenProvider = ({ children }: TokenProviderProps): ReactElement => {
   const [token, setTokenState] = useState<string | null>(readStoredToken);
 
-  const setToken = useCallback((value: string): void => {
+  const setToken = useCallback((value: string) => {
     const trimmed: string = value.trim();
     writeStoredToken(trimmed);
     setTokenState(trimmed);
   }, []);
 
-  const clearToken = useCallback((): void => {
+  const clearToken = useCallback(() => {
     writeStoredToken(null);
     setTokenState(null);
   }, []);

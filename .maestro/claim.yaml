@@ -1,0 +1,44 @@
+appId: com.apple.mobilesafari
+---
+# Requires a valid token already saved in the browser.
+- openLink: http://localhost:8081
+- extendedWaitUntil:
+    visible: "Total payback"
+    timeout: 60000
+- takeScreenshot: 01-home
+- tapOn:
+    text: "Claim"
+    index: 0
+- extendedWaitUntil:
+    visible: "Send to"
+    timeout: 30000
+- tapOn: "0.00"
+- inputText: "5"
+- assertVisible: "Minimum is 10 USDT."
+- takeScreenshot: 02-below-min
+- eraseText: 5
+- inputText: "10.5"
+- assertVisible: "You receive"
+- takeScreenshot: 03-quote
+- tapOn: "Done"
+- scrollUntilVisible:
+    element: "Review"
+    direction: DOWN
+- tapOn: "Review"
+- assertVisible: "Review your claim"
+- takeScreenshot: 04-review
+- tapOn: "Confirm claim"
+- extendedWaitUntil:
+    visible: "Claim status"
+    timeout: 60000
+- takeScreenshot: 05-status-pending
+- extendedWaitUntil:
+    visible:
+      text: "Completed|Failed"
+    timeout: 60000
+- takeScreenshot: 06-status-final
+- tapOn: "Home"
+- extendedWaitUntil:
+    visible: "Total payback"
+    timeout: 30000
+- takeScreenshot: 07-home-after

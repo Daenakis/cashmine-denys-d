@@ -12,7 +12,7 @@ export function readStoredToken(): string | null {
   }
 }
 
-export function writeStoredToken(value: string | null): void {
+export function writeStoredToken(value: string | null) {
   try {
     if (value === null) globalThis.localStorage?.removeItem(TOKEN_STORAGE_KEY);
     else globalThis.localStorage?.setItem(TOKEN_STORAGE_KEY, value);

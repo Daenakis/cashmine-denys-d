@@ -12,7 +12,7 @@ declare module '@tanstack/react-query' {
   }
 }
 
-function openTokenOnUnauthorized(error: unknown): void {
+function openTokenOnUnauthorized(error: unknown) {
   if (isApiError(error) && isUnauthorized(error)) router.push('/token');
 }
 

@@ -6,9 +6,9 @@ import { NOW_TICK_MS } from '@/constants/time';
 export function useNow(tickMs: number = NOW_TICK_MS): number {
   const [now, setNow] = useState<number>(Date.now);
 
-  useEffect((): (() => void) => {
-    const id: ReturnType<typeof setInterval> = setInterval((): void => setNow(Date.now()), tickMs);
-    return (): void => clearInterval(id);
+  useEffect(() => {
+    const id: ReturnType<typeof setInterval> = setInterval(() => setNow(Date.now()), tickMs);
+    return () => clearInterval(id);
   }, [tickMs]);
 
   return now;

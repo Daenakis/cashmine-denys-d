@@ -1,10 +1,14 @@
-import { type ReactElement, memo, useMemo } from 'react';
+import { router } from 'expo-router';
+import { type ReactElement, memo, useCallback, useMemo } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import type { BalanceItem } from '@/api/balances';
 import { type BalancesScreen, useBalancesScreen } from '@/balances/useBalancesScreen';
+import { isClaimBlocked } from '@/claims/helpers';
+import { useClaims } from '@/claims/useClaims';
 import { colors, fontSize, fontWeight, spacing } from '@/constants/theme';
 import { strings } from '@/i18n/strings';
+import type { AssetClaimStatus, ClaimsContextValue } from '@/types/claimTracking';
 import { Button } from '@/ui/Button';
 import { ErrorState } from '@/ui/ErrorState';
 import { LoadingState } from '@/ui/LoadingState';
@@ -17,6 +21,22 @@ export const BalancesContent = memo(({
   onChangeToken,
 }: BalancesContentProps): ReactElement => {
   const { state, refreshing, refresh }: BalancesScreen = useBalancesScreen();
+  const { getAssetStatus, dismissClaim, retryAttempt }: ClaimsContextValue = useClaims();
+
+  const openClaim = useCallback((asset: string) => {
+    router.push({ pathname: '/claim/[asset]', params: { asset } });
+  }, []);
+
+  const viewClaim = useCallback((id: string) => {
+    router.push({ pathname: '/claims/[id]', params: { id } });
+  }, []);
+
+  const checkAgain = useCallback(
+    (asset: string) => {
+      void retryAttempt(asset);
+    },
+    [retryAttempt],
+  );
 
   const changeTokenAction = useMemo(
     () => ({ title: strings.home.changeToken, onPress: onChangeToken }),
@@ -58,9 +78,21 @@ export const BalancesContent = memo(({
             onRefresh={refresh}
           />
           {state.data.items.map(
-            (item: BalanceItem): ReactElement => (
-              <AssetCard key={item.asset} item={item} />
-            ),
+            (item: BalanceItem): ReactElement => {
+              const claimStatus: AssetClaimStatus = getAssetStatus(item.asset);
+              return (
+                <AssetCard
+                  key={item.asset}
+                  item={item}
+                  claimStatus={claimStatus}
+                  claimBlocked={isClaimBlocked(claimStatus)}
+                  onClaim={openClaim}
+                  onViewClaim={viewClaim}
+                  onDismissClaim={dismissClaim}
+                  onCheckAgain={checkAgain}
+                />
+              );
+            },
           )}
         </View>
       );

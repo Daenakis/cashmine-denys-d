@@ -12,7 +12,7 @@ const HomeScreen = (): ReactElement => {
   const { token } = useToken();
   const hasToken: boolean = token !== null;
 
-  const openToken = useCallback((): void => router.push('/token'), []);
+  const openToken = useCallback(() => router.push('/token'), []);
 
   const renderHeaderRight = useCallback(
     (): ReactElement => (

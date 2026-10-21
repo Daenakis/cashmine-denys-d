@@ -14,14 +14,14 @@ const TokenScreen = (): ReactElement => {
   const [confirmingRemove, setConfirmingRemove] = useState<boolean>(false);
   const trimmed: string = useMemo((): string => draft.trim(), [draft]);
 
-  const save = useCallback((): void => {
+  const save = useCallback(() => {
     if (!trimmed) return;
     setToken(trimmed);
     setDraft('');
     goBackOrHome();
   }, [trimmed, setToken]);
 
-  const remove = useCallback((): void => {
+  const remove = useCallback(() => {
     if (!confirmingRemove) {
       setConfirmingRemove(true);
       return;

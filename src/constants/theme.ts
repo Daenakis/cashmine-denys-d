@@ -9,6 +9,9 @@ export const colors = {
   danger: '#C62828',
   success: '#2E7D32',
   warning: '#B26A00',
+  infoBackground: '#EAF2FE',
+  warningBackground: '#FFF4E0',
+  dangerBackground: '#FDECEC',
 } as const;
 
 export const spacing = { xs: 4, sm: 8, md: 16, lg: 24 } as const;

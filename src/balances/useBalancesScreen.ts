@@ -39,7 +39,7 @@ export function useBalancesScreen(): BalancesScreen {
     [data],
   );
 
-  const refresh = useCallback((): void => {
+  const refresh = useCallback(() => {
     void refetch();
   }, [refetch]);
 

@@ -28,7 +28,7 @@ export async function request<S extends z.ZodType>({
 
   const controller: AbortController = new AbortController();
   const timeout: ReturnType<typeof setTimeout> = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
-  const onExternalAbort = (): void => controller.abort();
+  const onExternalAbort = () => controller.abort();
   signal?.addEventListener('abort', onExternalAbort);
 
   let response: Response;
