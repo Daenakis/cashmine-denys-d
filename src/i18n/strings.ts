@@ -47,9 +47,9 @@ export const strings = {
     statusUnknown: "We couldn't confirm your last claim yet. Don't submit it again — we'll keep checking.",
     statusPending: (amount: string, asset: string) => `Claim of ${amount} ${asset} in progress`,
     statusSyncing: 'Balance is syncing with the server…',
-    statusFailed: (amount: string, asset: string, reason: string) =>
-      `Claim of ${amount} ${asset} failed: ${reason}. The amount is back in Available.`,
-    unknownReason: 'no reason given',
+    // The server's failureReason is a full sentence; show it as is.
+    statusFailed: (amount: string, asset: string, reason: string) => `Claim of ${amount} ${asset} failed. ${reason}`,
+    unknownReason: 'The amount is back in Available.',
   },
   claim: {
     title: (asset: string) => `Claim ${asset}`,

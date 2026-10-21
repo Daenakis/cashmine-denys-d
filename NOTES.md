@@ -59,9 +59,12 @@ All in `ai-logs/claude-code-session.md` (Claude Code in VS Code, project rules i
 ## Not done / known issues
 
 - **Activity** screen not built (the paginated `useActivity` hook and schemas exist).
-- Unknown-result and failed-claim paths are implemented but were **not reproduced live** (the test API
-  never timed out for me); covered by reasoning, not by a test. Next: mock the client and test `submit`.
+- The failed-claim path was seen live (Maestro run: status "Failed" with the server reason, Home notice,
+  amount back in Available). The unknown-result path (timeout / lost response) was **not reproduced live** —
+  the test API never timed out for me; covered by reasoning, not by a test. Next: mock the client and test `submit`.
 - No toast / push-style notification when a claim settles off-screen — only the Home banner.
 - Deep-linked claim screens have no back arrow; a header **Home** button is the workaround.
+- Home enables **Claim** whenever available > 0; the minimum is only known after `claim-options` loads, so
+  the form (not Home) tells the user they are below it.
 - Unit tests cover the money module only; no component or hook tests.
 - Client clock is used only for "Updated N s ago"; skew can make that label slightly off.

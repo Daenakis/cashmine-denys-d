@@ -1,44 +1,62 @@
 appId: com.apple.mobilesafari
 ---
-# Requires a valid token already saved in the browser.
+# Full claim check. Requires a valid token already saved in the browser.
 - openLink: http://localhost:8081
 - extendedWaitUntil:
     visible: "Total payback"
     timeout: 60000
 - takeScreenshot: 01-home
+
+# USDT is below its minimum: the form must refuse instead of offering an amount.
 - tapOn:
     text: "Claim"
     index: 0
 - extendedWaitUntil:
-    visible: "Send to"
+    visible: "You need at least 10 USDT available to claim."
     timeout: 30000
+- takeScreenshot: 02-usdt-below-min
+- tapOn: "Home"
+- extendedWaitUntil:
+    visible: "Total payback"
+    timeout: 30000
+
+# Deep link straight into the ETH claim form (no history): header Home is the way back.
+- openLink: http://localhost:8081/claim/ETH
+- extendedWaitUntil:
+    visible: "Send to"
+    timeout: 60000
+- assertVisible: "Home"
+- takeScreenshot: 03-eth-form
 - tapOn: "0.00"
-- inputText: "5"
-- assertVisible: "Minimum is 10 USDT."
-- takeScreenshot: 02-below-min
-- eraseText: 5
-- inputText: "10.5"
+- inputText: ".5"
+- assertVisible: "Use digits and an optional dot, e.g. 0.5 or 12."
+- takeScreenshot: 04-format-error
+- eraseText: 2
+- inputText: "1"
 - assertVisible: "You receive"
-- takeScreenshot: 03-quote
+- takeScreenshot: 05-quote
 - tapOn: "Done"
 - scrollUntilVisible:
     element: "Review"
     direction: DOWN
 - tapOn: "Review"
 - assertVisible: "Review your claim"
-- takeScreenshot: 04-review
+- takeScreenshot: 06-review
 - tapOn: "Confirm claim"
 - extendedWaitUntil:
     visible: "Claim status"
     timeout: 60000
-- takeScreenshot: 05-status-pending
+- takeScreenshot: 07-status-pending
 - extendedWaitUntil:
     visible:
       text: "Completed|Failed"
     timeout: 60000
-- takeScreenshot: 06-status-final
+- takeScreenshot: 08-status-final
 - tapOn: "Home"
 - extendedWaitUntil:
     visible: "Total payback"
     timeout: 30000
-- takeScreenshot: 07-home-after
+- scrollUntilVisible:
+    element: "ETH"
+    direction: DOWN
+- takeScreenshot: 09-home-after-claim
