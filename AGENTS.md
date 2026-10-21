@@ -12,7 +12,7 @@ Money is real for users → **correctness over polish**.
 ## Deliverables (hard deadline 19:00 UTC, no push/redeploy after)
 
 - Expo (RN + TypeScript) app, shipped as a **web build**, designed for ~390 px phone width.
-- Deployed (Vercel): `https://cashmine-denys-d.vercel.app`.
+- Deployed (Vercel): `https://cashmine-task-denys-d.vercel.app`.
 - Public GitHub repo, full history, commit at least every 30 min, never squash.
 - `ai-logs/` — raw AI conversations (not tidied, token removed). Must include the conversation where AI
   proposes ≥2 approaches for "balance after claim" before we choose.

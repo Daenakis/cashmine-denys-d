@@ -1,6 +1,6 @@
 # CashMine payback — Expo web slice
 
-**Live:** https://cashmine-denys-d.vercel.app
+**Live:** https://cashmine-task-denys-d.vercel.app
 
 Open it on a phone, tap **Add token** and paste your API token. It is kept in this browser only
 (`localStorage`) and can be removed or replaced from the **Token** button.

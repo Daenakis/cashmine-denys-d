@@ -63,7 +63,7 @@ Read `package.json` for exact versions (Expo SDK, React, TS) — never assume fr
 - Conventional Commits, lowercase, imperative. No AI attribution: no `Co-Authored-By`, no "Generated with".
 - Before any push: `git grep` + `git log -p` for the token value and for `.env` — report the result.
   Same check over `ai-logs/` before committing it.
-- Live link to send = production alias `https://cashmine-denys-d.vercel.app` (check in the Vercel project's Domains).
+- Live link to send = production alias `https://cashmine-task-denys-d.vercel.app` (check in the Vercel project's Domains).
   Never send the hashed `<project>-<hash>-<team>.vercel.app` URL from CLI output — it is behind Vercel login.
 - Replies: short, in Russian. Code, comments, commits, README — in English.
 - When compacting, preserve: the plan, decisions made, files changed, and the current step.
