@@ -5,8 +5,6 @@ export const API_BASE_URL: string = 'https://task-api.cashmine.io';
 
 export const REQUEST_TIMEOUT_MS: number = 20_000;
 
-export const MS_PER_SECOND: number = 1000;
-
 export const HTTP_STATUS = {
   unauthorized: 401,
   tooManyRequests: 429,

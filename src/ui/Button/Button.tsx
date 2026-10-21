@@ -3,23 +3,15 @@ import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 
 import { activeOpacity, colors, disabledOpacity, fontSize, fontWeight, radius, sizes, spacing } from '@/constants/theme';
 
-type Variant = 'primary' | 'secondary' | 'danger';
+import type { ButtonProps } from './types';
 
-type Props = {
-  title: string;
-  onPress: () => void;
-  variant?: Variant;
-  disabled?: boolean;
-  testID?: string;
-};
-
-export const Button = memo(function Button({
+export const Button = memo(({
   title,
   onPress,
   variant = 'primary',
   disabled = false,
   testID,
-}: Props): ReactElement {
+}: ButtonProps): ReactElement => {
   const containerStyle = useMemo(
     () => [styles.base, styles[variant], disabled && styles.disabled],
     [variant, disabled],
@@ -43,6 +35,8 @@ export const Button = memo(function Button({
     </TouchableOpacity>
   );
 });
+
+Button.displayName = 'Button';
 
 const styles = StyleSheet.create({
   base: {

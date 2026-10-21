@@ -1,14 +1,12 @@
-import { type ReactElement, type ReactNode, createContext, useCallback, useMemo, useState } from 'react';
+import { type ReactElement, useCallback, useMemo, useState } from 'react';
 
 import type { TokenContextValue } from '@/types/token';
 
-import { readStoredToken, writeStoredToken } from './tokenStorage';
+import { TokenContext } from '../TokenContext';
+import { readStoredToken, writeStoredToken } from '../tokenStorage';
+import type { TokenProviderProps } from './types';
 
-export const TokenContext = createContext<TokenContextValue | null>(null);
-
-type Props = { children: ReactNode };
-
-export function TokenProvider({ children }: Props): ReactElement {
+export const TokenProvider = ({ children }: TokenProviderProps): ReactElement => {
   const [token, setTokenState] = useState<string | null>(readStoredToken);
 
   const setToken = useCallback((value: string): void => {
@@ -28,4 +26,4 @@ export function TokenProvider({ children }: Props): ReactElement {
   );
 
   return <TokenContext.Provider value={value}>{children}</TokenContext.Provider>;
-}
+};

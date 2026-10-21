@@ -1,5 +1,7 @@
-import { HTTP_STATUS, KNOWN_API_ERROR_CODES, MS_PER_SECOND } from '@/constants/api';
+import { HTTP_STATUS, KNOWN_API_ERROR_CODES } from '@/constants/api';
 import { RETRY_BASE_DELAY_MS, RETRY_MAX_DELAY_MS } from '@/constants/query';
+import { MS_PER_SECOND } from '@/constants/time';
+import { strings } from '@/i18n/strings';
 import type { ApiError, ApiErrorCode, ApiResult, HttpApiError } from '@/types/apiError';
 
 import { errorEnvelopeSchema } from './schemas';
@@ -69,4 +71,23 @@ export function toHttpError(response: Response, json: unknown): ApiError {
 export function unwrap<T>(result: ApiResult<T>): T {
   if (result.ok) return result.data;
   throw result.error;
+}
+
+// User-facing message for any API failure.
+export function getApiErrorMessage(error: ApiError): string {
+  switch (error.kind) {
+    case 'config':
+      return strings.errors.noToken;
+    case 'network':
+      return strings.errors.network;
+    case 'timeout':
+      return strings.errors.timeout;
+    case 'parse':
+      return strings.errors.parse;
+    case 'http':
+      if (error.status === HTTP_STATUS.unauthorized) return strings.errors.unauthorized;
+      if (error.status === HTTP_STATUS.tooManyRequests) return strings.errors.rateLimited;
+      if (error.status >= HTTP_STATUS.serverErrorMin) return strings.errors.server;
+      return error.message;
+  }
 }

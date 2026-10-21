@@ -1,14 +1,14 @@
 import { Stack, router } from 'expo-router';
 import { type ReactElement, useCallback, useMemo } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+import { BalancesContent } from '@/components/balances/BalancesContent';
+import { colors, fontSize, fontWeight, sizes, spacing } from '@/constants/theme';
 import { strings } from '@/i18n/strings';
-import { maskToken } from '@/token/helpers';
 import { useToken } from '@/token/useToken';
 import { Button } from '@/ui/Button';
-import { colors, fontSize, fontWeight, sizes, spacing } from '@/constants/theme';
 
-export default function HomeScreen(): ReactElement {
+const HomeScreen = (): ReactElement => {
   const { token } = useToken();
   const hasToken: boolean = token !== null;
 
@@ -26,12 +26,10 @@ export default function HomeScreen(): ReactElement {
   const screenOptions = useMemo(() => ({ headerRight: renderHeaderRight }), [renderHeaderRight]);
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
       <Stack.Screen options={screenOptions} />
-      {token ? (
-        <Text testID="token-status" style={styles.text}>
-          {strings.home.tokenSet(maskToken(token))}
-        </Text>
+      {hasToken ? (
+        <BalancesContent onChangeToken={openToken} />
       ) : (
         <View style={styles.empty}>
           <Text style={styles.title}>{strings.home.emptyTitle}</Text>
@@ -39,12 +37,15 @@ export default function HomeScreen(): ReactElement {
           <Button testID="add-token" title={strings.home.addTokenButton} onPress={openToken} />
         </View>
       )}
-    </View>
+    </ScrollView>
   );
-}
+};
+
+export default HomeScreen;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: spacing.md },
+  scroll: { flex: 1 },
+  content: { padding: spacing.md },
   empty: { gap: spacing.md, marginTop: spacing.lg },
   title: { fontSize: fontSize.xl, fontWeight: fontWeight.semibold, color: colors.text },
   text: { fontSize: fontSize.body, color: colors.muted },

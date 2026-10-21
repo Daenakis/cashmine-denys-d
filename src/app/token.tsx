@@ -8,7 +8,7 @@ import { useToken } from '@/token/useToken';
 import { Button } from '@/ui/Button';
 import { colors, fontSize, fontWeight, radius, sizes, spacing } from '@/constants/theme';
 
-export default function TokenScreen(): ReactElement {
+const TokenScreen = (): ReactElement => {
   const { token, setToken, clearToken } = useToken();
   const [draft, setDraft] = useState<string>('');
   const [confirmingRemove, setConfirmingRemove] = useState<boolean>(false);
@@ -67,7 +67,9 @@ export default function TokenScreen(): ReactElement {
       </View>
     </View>
   );
-}
+};
+
+export default TokenScreen;
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: spacing.md, gap: spacing.md },
