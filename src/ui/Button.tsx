@@ -1,4 +1,4 @@
-import { memo, useMemo } from 'react';
+import { type ReactElement, memo, useMemo } from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 
 import { colors, spacing } from './theme';
@@ -19,7 +19,7 @@ export const Button = memo(function Button({
   variant = 'primary',
   disabled = false,
   testID,
-}: Props) {
+}: Props): ReactElement {
   const containerStyle = useMemo(
     () => [styles.base, styles[variant], disabled && styles.disabled],
     [variant, disabled],

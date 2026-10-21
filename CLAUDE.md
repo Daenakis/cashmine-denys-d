@@ -29,7 +29,7 @@ Read `package.json` for exact versions (Expo SDK, React, TS) — never assume fr
 - Functional components and hooks only. No classes anywhere (services, stores, errors included).
 - `src/api/client.ts`: one `fetch` wrapper returning `Result<T> = { ok: true; data } | { ok: false; error: ApiError }`,
   `ApiError` is a tagged union (`network | http | parse | config`). Bearer token from the in-app token store
-  (`src/storage/token.ts`, `localStorage`), entered by the user via the token modal (add / remove / replace).
+  (`TokenProvider` context in `src/token/`, persisted to `localStorage`), entered by the user via the token modal (add / remove / replace).
   App code never reads `process.env.EXPO_PUBLIC_API_TOKEN` — it would be inlined into the bundle; `.env` is shell-only.
   Before deploy: grep `dist/` for the token value.
 - `src/api/<resource>.ts`: zod schemas from the API docs (`z.infer` for types), parse failure → `ApiError` `parse`,

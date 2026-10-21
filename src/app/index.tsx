@@ -1,20 +1,21 @@
 import { Stack, router } from 'expo-router';
-import { useCallback, useMemo } from 'react';
+import { type ReactElement, useCallback, useMemo } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { strings } from '@/i18n/strings';
-import { maskToken, useToken } from '@/storage/token';
+import { maskToken } from '@/token/tokenStorage';
+import { useToken } from '@/token/useToken';
 import { Button } from '@/ui/Button';
 import { colors, spacing } from '@/ui/theme';
 
-export default function HomeScreen() {
-  const token = useToken();
-  const hasToken = token !== null;
+export default function HomeScreen(): ReactElement {
+  const { token } = useToken();
+  const hasToken: boolean = token !== null;
 
-  const openToken = useCallback(() => router.push('/token'), []);
+  const openToken = useCallback((): void => router.push('/token'), []);
 
   const renderHeaderRight = useCallback(
-    () => (
+    (): ReactElement => (
       <TouchableOpacity testID="open-token" hitSlop={8} onPress={openToken} style={styles.headerButton}>
         <Text style={styles.headerButtonText}>{hasToken ? strings.home.tokenButton : strings.home.addTokenButton}</Text>
       </TouchableOpacity>

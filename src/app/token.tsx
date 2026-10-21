@@ -1,33 +1,34 @@
-import { useCallback, useMemo, useState } from 'react';
+import { type ReactElement, useCallback, useMemo, useState } from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { strings } from '@/i18n/strings';
 import { goBackOrHome } from '@/navigation/goBackOrHome';
-import { clearToken, maskToken, setToken, useToken } from '@/storage/token';
+import { maskToken } from '@/token/tokenStorage';
+import { useToken } from '@/token/useToken';
 import { Button } from '@/ui/Button';
 import { colors, spacing } from '@/ui/theme';
 
-export default function TokenScreen() {
-  const token = useToken();
-  const [draft, setDraft] = useState('');
-  const [confirmingRemove, setConfirmingRemove] = useState(false);
-  const trimmed = useMemo(() => draft.trim(), [draft]);
+export default function TokenScreen(): ReactElement {
+  const { token, setToken, clearToken } = useToken();
+  const [draft, setDraft] = useState<string>('');
+  const [confirmingRemove, setConfirmingRemove] = useState<boolean>(false);
+  const trimmed: string = useMemo((): string => draft.trim(), [draft]);
 
-  const save = useCallback(() => {
+  const save = useCallback((): void => {
     if (!trimmed) return;
     setToken(trimmed);
     setDraft('');
     goBackOrHome();
-  }, [trimmed]);
+  }, [trimmed, setToken]);
 
-  const remove = useCallback(() => {
+  const remove = useCallback((): void => {
     if (!confirmingRemove) {
       setConfirmingRemove(true);
       return;
     }
     clearToken();
     setConfirmingRemove(false);
-  }, [confirmingRemove]);
+  }, [confirmingRemove, clearToken]);
 
   return (
     <View style={styles.container}>

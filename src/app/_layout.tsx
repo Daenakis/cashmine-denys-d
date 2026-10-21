@@ -1,23 +1,36 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useState } from 'react';
+import { type ReactElement, useState } from 'react';
 import { StyleSheet } from 'react-native';
 
+import { createAppQueryClient } from '@/api/queryClient';
+import { useTokenScopedCache } from '@/api/useTokenScopedCache';
 import { strings } from '@/i18n/strings';
+import { TokenProvider } from '@/token/TokenContext';
 import { colors } from '@/ui/theme';
 
-export default function RootLayout() {
-  const [queryClient] = useState(() => new QueryClient());
+export default function RootLayout(): ReactElement {
+  const [queryClient] = useState(createAppQueryClient);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <StatusBar style="dark" />
-      <Stack screenOptions={screenOptions}>
-        <Stack.Screen name="index" options={homeOptions} />
-        <Stack.Screen name="token" options={tokenOptions} />
-      </Stack>
-    </QueryClientProvider>
+    <TokenProvider>
+      <QueryClientProvider client={queryClient}>
+        <StatusBar style="dark" />
+        <RootStack />
+      </QueryClientProvider>
+    </TokenProvider>
+  );
+}
+
+function RootStack(): ReactElement {
+  useTokenScopedCache();
+
+  return (
+    <Stack screenOptions={screenOptions}>
+      <Stack.Screen name="index" options={homeOptions} />
+      <Stack.Screen name="token" options={tokenOptions} />
+    </Stack>
   );
 }
 
@@ -31,6 +44,6 @@ const screenOptions = {
   headerTitleStyle: styles.headerTitle,
 };
 
-const homeOptions = { title: strings.appName };
+const homeOptions: { title: string } = { title: strings.appName };
 
 const tokenOptions = { title: strings.token.title, presentation: 'modal' } as const;
