@@ -1,0 +1,23 @@
+{
+  "enabledPlugins": {
+    "expo@claude-plugins-official": true
+  },
+  "permissions": {
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Bash(cat .env*)",
+      "Bash(git push *)",
+      "Bash(gh repo *)",
+      "Bash(vercel *)",
+      "Bash(npx vercel *)",
+      "Bash(npm publish *)"
+    ],
+    "ask": [
+      "Bash(npm install *)",
+      "Bash(npm i *)",
+      "Bash(npx expo install *)",
+      "WebFetch"
+    ]
+  }
+}
