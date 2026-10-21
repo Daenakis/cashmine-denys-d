@@ -21,13 +21,17 @@ Read `package.json` for exact versions (Expo SDK, React, TS) — never assume fr
 - No CORS workarounds through third-party proxies (cors-anywhere etc.). If the browser hits CORS — stop and tell me.
 - Outward-facing actions are mine: `git push`, `gh repo ...`, `vercel ...`, any email or external service.
   Prepare the exact command and stop.
-- You may `git commit` locally after each green step without asking. Never amend or rewrite pushed history.
+- Do NOT commit after a subtask. Show the result and wait for my review; commit only when I write `NEXT`.
+  Never amend or rewrite pushed history.
 
 ## Architecture
 
 - Functional components and hooks only. No classes anywhere (services, stores, errors included).
 - `src/api/client.ts`: one `fetch` wrapper returning `Result<T> = { ok: true; data } | { ok: false; error: ApiError }`,
-  `ApiError` is a tagged union (`network | http | parse | config`). Bearer token from `process.env.EXPO_PUBLIC_API_TOKEN`.
+  `ApiError` is a tagged union (`network | http | parse | config`). Bearer token from the in-app token store
+  (`src/storage/token.ts`, `localStorage`), entered by the user via the token modal (add / remove / replace).
+  App code never reads `process.env.EXPO_PUBLIC_API_TOKEN` — it would be inlined into the bundle; `.env` is shell-only.
+  Before deploy: grep `dist/` for the token value.
 - `src/api/<resource>.ts`: zod schemas from the API docs (`z.infer` for types), parse failure → `ApiError` `parse`,
   plus React Query hooks. Screens stay thin.
 - Every server-data screen handles: loading, error with Retry, empty, and success. Handle pagination if the API has it.
@@ -45,7 +49,7 @@ Read `package.json` for exact versions (Expo SDK, React, TS) — never assume fr
 
 1. `npx tsc --noEmit` passes.
 2. `npx expo export -p web` passes.
-3. For UI changes: with `npx expo start --web` running in the background, run the flow in **mobile Safari on the
+3. Maestro only when I ask for it (not after every step). When asked: with `npx expo start --web` running in the background, run the flow in **mobile Safari on the
    booted iOS Simulator**: `maestro --device <booted UDID> test .maestro/<flow>.yaml`, flow header
    `appId: com.apple.mobilesafari` + `- openLink: http://localhost:8081`. Look at the screenshots under
    `~/.maestro/tests/<latest run>/<flow>/takeScreenshot/`. Quick look without a flow:

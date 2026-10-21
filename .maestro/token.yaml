@@ -1,0 +1,43 @@
+appId: com.apple.mobilesafari
+---
+# Safari does not expose RN testIDs to accessibility, so match on visible text.
+- openLink: http://localhost:8081
+- extendedWaitUntil:
+    visible: "CashMine"
+    timeout: 60000
+# Reset a token left over from a previous run.
+- runFlow:
+    when:
+      visible: "Token"
+    commands:
+      - tapOn: "Token"
+      - tapOn: "Remove token"
+      - tapOn: "Tap again to remove"
+      - openLink: http://localhost:8081
+- assertVisible: "Add your API token"
+- takeScreenshot: 01-home-no-token
+- tapOn:
+    text: "Add token"
+    index: 1
+- tapOn: "Paste token here"
+- inputText: "dummy-token-1234"
+- takeScreenshot: 02-token-modal
+- tapOn: "Save"
+- assertVisible: "Token set ••••1234"
+- takeScreenshot: 03-home-with-token
+- tapOn: "Token"
+- assertVisible: "••••1234"
+- tapOn: "Remove token"
+- assertVisible: "Tap again to remove"
+- tapOn: "Tap again to remove"
+- assertVisible: "Paste your API token"
+- takeScreenshot: 04-token-removed
+- tapOn: "Paste token here"
+- inputText: "second-token-9999"
+- tapOn: "Save"
+- assertVisible: "Token set ••••9999"
+- takeScreenshot: 05-token-replaced
+- tapOn: "Token"
+- tapOn: "Remove token"
+- tapOn: "Tap again to remove"
+- takeScreenshot: 06-cleanup
